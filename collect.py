@@ -9,7 +9,6 @@ data = json.load(f)
 unique_data = {each['word']: each for each in data["data"]}.values()
 
 
-# print(unique_data)
 
 def collectData():
     for i in unique_data:
