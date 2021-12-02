@@ -6,12 +6,11 @@ f = open("data/dictionary.json", encoding="utf-8")
 
 data = json.load(f)
 
-unique_data = {each['word']: each for each in data["data"]}.values()
 
 
 
 def collectData():
-    for i in unique_data:
+    for i in data["data"]:
         video = wget.download(f"https://qipedc.moet.gov.vn/videos/{i['_id']}.mp4", out="data/datasets")
         video = video.split("/")[-1]
         cap = cv2.VideoCapture(f"data/datasets/{video}")
