@@ -5,8 +5,11 @@ import os
 import io
 from flask import Flask, jsonify, request
 from werkzeug.utils import secure_filename
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+
 
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 
@@ -14,6 +17,10 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route("/")
+def hello_world():
+    return "<p>Hello, World!</p>"
 
 
 @app.route("/face", methods=['POST'])
@@ -33,6 +40,10 @@ def text_to_speech_utils():
         stream = io.BytesIO(buf)
         detected_faces = face_client.face.detect_with_stream(stream, return_face_id=True,
                                                              return_face_attributes=face_attributes)
+        if len(detected_faces) == 0:
+            return jsonify({
+                "message": "Can't verfiy face!"
+            })
         return jsonify({
             'gender': detected_faces[0].face_attributes.gender,
             'age': detected_faces[0].face_attributes.age

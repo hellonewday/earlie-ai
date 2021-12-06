@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/b10aa2e4-d895-4579-8d5f-ce9395651c4a/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/earlie-ai",
+    "appService.deploySubpath": "api"
+}
