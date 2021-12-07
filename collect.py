@@ -1,9 +1,45 @@
 import cv2
 import wget
 import json
+import os
+from logging import error
+import youtube_dl as ydl
+from youtube_dl.utils import DownloadError
 
-# file = open("data/asl/")
+def _extract_video_id(url=''):
+    index = url.index('?v=') + 3
+    return url[index:]
 
+_MSASL_VIDEOS_DIR = 'data/asl/youtube'
+
+def _downloaded_video_ids():
+    videos = os.listdir(_MSASL_VIDEOS_DIR)
+    return set([video[:-4] for video in videos])
+
+def _video_urls():
+    datasetType = ["train","val","test"]
+    urls = set()
+    for type in datasetType:
+        f = open(f"data/asl/MSASL_{type}.json", encoding="utf-8")
+        data = json.load(f)
+        urls = urls.union({it['url'] for it in data})
+        urls = set(urls)
+        return {url for url in urls if _extract_video_id(url) not in _downloaded_video_ids()}
+
+def runASL():
+    print(len(_video_urls()))
+
+
+def collectASLData(data):
+    ydl_opts = {'outtmpl': 'data/asl/youtube/%(id)s.%(ext)s'}
+    with ydl.YoutubeDL(ydl_opts) as video:
+        try:
+            video.download([data])
+        except DownloadError:
+            error(f'Video at {data} could not be downloaded.')
+
+
+runASL()
 
 ## Run this one!
 def runVSL():
