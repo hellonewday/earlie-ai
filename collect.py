@@ -2,18 +2,21 @@ import cv2
 import wget
 import json
 
-f = open("data/dictionary.json", encoding="utf-8")
-
-data = json.load(f)
+# file = open("data/asl/")
 
 
+## Run this one!
+def runVSL():
+    f = open("data/vsl/dictionary.json", encoding="utf-8")
+    data = json.load(f)
+    collectVSLData(data)
 
 
-def collectData():
+def collectVSLData(data):
     for i in data["data"]:
-        video = wget.download(f"https://qipedc.moet.gov.vn/videos/{i['_id']}.mp4", out="data/datasets")
+        video = wget.download(f"https://qipedc.moet.gov.vn/videos/{i['_id']}.mp4", out="data/vsl/datasets")
         video = video.split("/")[-1]
-        cap = cv2.VideoCapture(f"data/datasets/{video}")
+        cap = cv2.VideoCapture(f"data/vsl/datasets/{video}")
         cnt = 0
 
         w_frame, h_frame = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -23,7 +26,7 @@ def collectData():
 
         # output
         fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-        out = cv2.VideoWriter(f"data/cropped/{video}", fourcc, fps, (w, h))
+        out = cv2.VideoWriter(f"data/vsl/cropped/{video}", fourcc, fps, (w, h))
 
         while (cap.isOpened()):
             ret, frame = cap.read()
@@ -34,21 +37,18 @@ def collectData():
                 crop_frame = frame[y:y + h, x:x + w]
 
                 xx = cnt * 100 / frames
-                print(int(xx), '%')
+                # print(int(xx), '%')
 
                 out.write(crop_frame)
 
                 # Just to see the video in real time
-                cv2.imshow('croped', crop_frame)
-
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
+                # cv2.imshow('croped', crop_frame)
+                #
+                # if cv2.waitKey(1) & 0xFF == ord('q'):
+                #     break
             else:
                 break
 
-        cap.release()
+        # cap.release()
         out.release()
-        cv2.destroyAllWindows()
-
-
-collectData()
+        # cv2.destroyAllWindows()
