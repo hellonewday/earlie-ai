@@ -24,7 +24,7 @@ def _video_urls():
     datasetType = ["train", "val", "test"]
     urls = set()
     for type in datasetType:
-        f = open(f"data/asl/MSASL_{type}.json", encoding="utf-8")
+        f = open(f"data/asl/MSALN_{type}.json", encoding="utf-8")
         data = json.load(f)
         urls = urls.union({it['url'] for it in data})
         urls = set(urls)
