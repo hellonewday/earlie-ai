@@ -6,18 +6,22 @@ from logging import error
 import youtube_dl as ydl
 from youtube_dl.utils import DownloadError
 
+
 def _extract_video_id(url=''):
     index = url.index('?v=') + 3
     return url[index:]
 
+
 _MSASL_VIDEOS_DIR = 'data/asl/youtube'
+
 
 def _downloaded_video_ids():
     videos = os.listdir(_MSASL_VIDEOS_DIR)
     return set([video[:-4] for video in videos])
 
+
 def _video_urls():
-    datasetType = ["train","val","test"]
+    datasetType = ["train", "val", "test"]
     urls = set()
     for type in datasetType:
         f = open(f"data/asl/MSASL_{type}.json", encoding="utf-8")
@@ -26,8 +30,11 @@ def _video_urls():
         urls = set(urls)
         return {url for url in urls if _extract_video_id(url) not in _downloaded_video_ids()}
 
+
+## Run this one!
 def runASL():
-    print(len(_video_urls()))
+    for video in _video_urls():
+        collectASLData(video)
 
 
 def collectASLData(data):
@@ -40,6 +47,7 @@ def collectASLData(data):
 
 
 runASL()
+
 
 ## Run this one!
 def runVSL():
